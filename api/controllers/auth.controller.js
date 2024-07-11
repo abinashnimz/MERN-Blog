@@ -1,16 +1,16 @@
 import User from "../models/user.model.js";
+import { errorHandler } from "../utils/error.js";
 
-
-export const signup = async (req, res)=>{
+export const signup = async (req, res, next)=>{
     try{
         const {username, email, password} = req.body;
         if(!username || !email || !password || username==="" || email==="" || password===""){
-            return res.json({message:"All fields are required."});
+            next(errorHandler(400, "All fields are required"));
         }
         
         const userExist = await User.findOne({email:email});
         if(userExist){
-            return res.json({message:"User already Exist"});
+            next(errorHandler(401, "User already exist"));
         }
         
         const newUser = new User({
@@ -26,6 +26,6 @@ export const signup = async (req, res)=>{
         }
 
     }catch(err){
-        res.status(404).json({message:err.message})
+        next(err);
     }
 }
