@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import bcrypt from "bcryptjs";
 
 const userSchema = new mongoose.Schema({
     username:{
@@ -16,6 +17,21 @@ const userSchema = new mongoose.Schema({
         required: true
     }
 }, {timestamps:true});
+
+//Middleware for Hashing Password
+userSchema.pre("save", async function(next){
+    try{
+        let user = this;
+        const saltRound = await bcrypt.genSalt(10);
+        if(user.isModified("password")){
+            user.password = await bcrypt.hash(user.password, saltRound);
+        }
+    }catch(err){
+        next(err);
+    }
+})
+
+
 
 const User = new mongoose.model("User", userSchema);
 
