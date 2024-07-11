@@ -5,8 +5,14 @@ export const signup = async (req, res)=>{
     try{
         const {username, email, password} = req.body;
         if(!username || !email || !password || username==="" || email==="" || password===""){
-            res.json({message:"All fields are required."});
+            return res.json({message:"All fields are required."});
         }
+        
+        const userExist = await User.findOne({email:email});
+        if(userExist){
+            return res.json({message:"User already Exist"});
+        }
+        
         const newUser = new User({
             username,
             email,
