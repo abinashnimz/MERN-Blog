@@ -11,6 +11,8 @@ export const SignUp = () => {
     const navigate = useNavigate();
 
     const handleChange = (e)=>{
+        setErrorMessage(null);
+        setLoading(false);
         setFormData({...formData, [e.target.id]: e.target.value.trim()});
     }
     
