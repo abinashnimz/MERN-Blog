@@ -45,10 +45,10 @@ export const signin = async (req, res, next)=>{
             return next(errorHandler(400, "Invalid Credentials"));
         }
         const token = await validUser.generateToken();
-        const { password:pass, ...rest } = validUser._doc;
+        const { password:pass, ...userdata } = validUser._doc;
         res.status(200).cookie("access_token", token,{
             httpOnly:true,
-        }).json({rest});
+        }).json({userdata, token:token});
 
     }catch(err){
         next(err);
