@@ -54,3 +54,35 @@ export const signin = async (req, res, next)=>{
         next(err);
     }
 }
+
+export const google = async(req, res, next)=>{
+    const { name, email, googlePhotoUrl } = req.body;
+    try{
+        const userExist = await User.findOne({email});
+        if(userExist){
+            const token = await userExist.generateToken();
+            const { password:pass, ...userdata } = userExist._doc;
+            res.status(200).cookie("access_token", token,{
+                httpOnly:true,
+            }).json({userdata, token:token});
+        }else{
+            const randomPassword = Math.random().toString(36).slice(-8);
+            const newUser = new User({
+                username: name.split(" ").join("").toLocaleLowerCase()+Math.random().toString(9).slice(-4),
+                email: email,
+                password: randomPassword,
+                profilePic: googlePhotoUrl,
+            });
+            const response = await newUser.save();
+            const token = await newUser.generateToken();
+            const { password, ...userData } = newUser._doc;
+            if(response){
+                res.status(201).cookie("access_token", token).json({userData, token:token});
+            }else{
+                res.status(402).json({message:"Signup Failed"})
+            }
+        }
+    }catch(err){
+        next(err);
+    }
+}
