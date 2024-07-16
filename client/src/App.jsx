@@ -7,6 +7,7 @@ import { SignUp } from "./pages/SignUp";
 import { Dashboard } from "./pages/Dashboard";
 import { Header } from "./components/Header";
 import { FooterComp } from "./components/Footer";
+import { PrivateRoute } from "./components/PrivateRoute";
 
 
 
@@ -18,7 +19,9 @@ export const App = ()=>{
         <Route path="/" element={<Home />} />
         <Route path="/about" element={<About />} />
         <Route path="/project" element={<Project />} />
-        <Route path="/dashboard" element={<Dashboard />}/>
+        <Route element={<PrivateRoute/>}>
+          <Route path="/dashboard" element={<Dashboard />}/>
+        </Route>
         <Route path="sign-in" element={<SignIn />} />
         <Route path="sign-up" element={<SignUp />} />
       </Routes>
