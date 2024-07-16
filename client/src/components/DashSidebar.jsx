@@ -23,7 +23,7 @@ export const DashSidebar = ()=>{
                             Profile
                         </Sidebar.Item>
                     </Link>
-                    <Sidebar.Item icon={HiArrowSmRight}>
+                    <Sidebar.Item icon={HiArrowSmRight} className="cursor-pointer">
                         Sign Out
                     </Sidebar.Item>
                 </Sidebar.ItemGroup>
