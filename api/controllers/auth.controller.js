@@ -48,7 +48,7 @@ export const signin = async (req, res, next)=>{
         const { password:pass, ...userdata } = validUser._doc;
         res.status(200).cookie("access_token", token,{
             httpOnly:true,
-        }).json({userdata, token:token});
+        }).json(userdata);
 
     }catch(err){
         next(err);
@@ -75,9 +75,9 @@ export const google = async(req, res, next)=>{
             });
             const response = await newUser.save();
             const token = await newUser.generateToken();
-            const { password, ...userData } = newUser._doc;
+            const { password, ...userdata } = newUser._doc;
             if(response){
-                res.status(201).cookie("access_token", token).json({userData, token:token});
+                res.status(201).cookie("access_token", token).json(userdata);
             }else{
                 res.status(402).json({message:"Signup Failed"})
             }

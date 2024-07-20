@@ -40,8 +40,8 @@ export const updateUser = async (req, res, next)=>{
             },
             { new:true }
         );
-        const { password, ...userData } = updatedUser._doc;
-        res.status(201).json(userData);
+        const { password, ...userdata } = updatedUser._doc;
+        res.status(201).json(userdata);
     }catch(err){
         next(err);
     }

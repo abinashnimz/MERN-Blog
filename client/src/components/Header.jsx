@@ -10,7 +10,7 @@ export const Header = () => {
     const dispatch = useDispatch();
     const { currentUser } = useSelector(state => state.user);
     const { theme } = useSelector(state=>state.theme);
-    console.log(currentUser);
+    // console.log(currentUser);
     return (
         <Navbar className="border-b-2">
             <Link to="/" className="self-center whitespace-nowrap text-sm sm:text-xl font-semibold dark:text-white">
@@ -36,13 +36,13 @@ export const Header = () => {
                             <Avatar
                                 alt="user"
                                 rounded
-                                img={currentUser.userdata.profilePic}
+                                img={currentUser.profilePic}
                             />
                         }
                         >
                             <Dropdown.Header>
-                                <span className="block text-sm">@{currentUser.userdata.username}</span>
-                                <span className="block text-sm font-medium truncate">{currentUser.userdata.email}</span>
+                                <span className="block text-sm">@{currentUser.username}</span>
+                                <span className="block text-sm font-medium truncate">{currentUser.email}</span>
                             </Dropdown.Header>
                             <Link to={"/dashboard?tab=profile"}>
                             <Dropdown.Item>Profile</Dropdown.Item>
