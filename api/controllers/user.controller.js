@@ -45,4 +45,27 @@ export const updateUser = async (req, res, next)=>{
     }catch(err){
         next(err);
     }
+};
+
+export const deleteUser = async (req, res, next)=>{
+    if(req.user.userId !== req.params.userId){
+        return next(403, "You are not allowed to delete this user");
+    }
+    try{
+        const data = await User.findByIdAndDelete({_id:req.params.userId});
+        if(!data){
+            return next(500, "Something went wrong");
+        }
+        res.status(202).json("User deleted successfully");
+    }catch(err){
+        next(err);
+    }
+}
+
+export const signoutUser = async (req, res, next)=>{
+    try{
+       await res.clearCookie("access_token").status(200).json("User signout successfully");
+    }catch(err){
+        next(err);
+    }
 }
