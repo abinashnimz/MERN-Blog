@@ -37,6 +37,16 @@ userSchema.pre("save", async function(next){
     }
 });
 
+//Middleware for Comparing Password for update user
+// userSchema.methods.hashPassword = async function(password){
+//     try{
+//         const saltRound = await bcrypt.genSalt(10);
+//         return await bcrypt.hash(password, saltRound);
+//     }catch(err){
+//         next(err);
+//     }
+// }
+
 //Middleware for Comparing Password
 userSchema.methods.comparePassword = async function(password){
     try{
