@@ -14,14 +14,18 @@ export const Header = () => {
     // console.log(currentUser);
 
     const handleSignout = async ()=>{
-        const res = await fetch("/api/user/signout", {
-            method: "POST"
-        });
-        const data = res.json();
-        if(!res.ok){
-            console.log(data.message);
-        }else{
-            dispatch(signoutSuccess());
+        try{
+            const res = await fetch("/api/user/signout", {
+                method: "POST"
+            });
+            const data = res.json();
+            if(!res.ok){
+                console.log(data.message);
+            }else{
+                dispatch(signoutSuccess());
+            }
+        }catch(err){
+            console.log(err);
         }
     }
 
