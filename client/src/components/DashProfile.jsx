@@ -58,7 +58,7 @@ export const DashProfile = ()=>{
         setImageFileUploading(true);
         setImageFileUploadingError(null);
         const storage = getStorage(app);
-        const fileName = new Date().getTime()+imageFile.name;
+        const fileName = new Date().getTime()+"-"+imageFile.name.trim();
         const storageRef = ref(storage, fileName);
         const uploadTask = uploadBytesResumable(storageRef, imageFile);
         uploadTask.on(
@@ -68,7 +68,7 @@ export const DashProfile = ()=>{
                 setImageFileUploadingProgress(progress.toFixed(0));
             },
             (error)=>{
-                setImageFileUploadingError("Could not upload image (File must be less thatn 2MB)");
+                setImageFileUploadingError("Could not upload image (File must be less than 2MB)");
                 setImageFileUploadingProgress(null);
                 setImageFile(null);
                 setImageFileUrl(null);
