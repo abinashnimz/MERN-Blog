@@ -24,7 +24,7 @@ export const CreatePost = ()=>{
                         Upload image
                     </Button>
                 </div>
-                <ReactQuill theme="snow" placeholder="Write something" className="h-72 mb-12" />
+                <ReactQuill theme="snow" placeholder="Write something" className="h-72 mb-12" required/>
                 <Button gradientDuoTone="purpleToPink">
                     Publish
                 </Button>
