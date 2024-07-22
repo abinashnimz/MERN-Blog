@@ -17,9 +17,9 @@ export const post = async (req, res, next)=>{
     try{
         const response = await newPost.save();
         if(response){
-            res.status(201).json("Post Created");
+            res.status(201).json(response);
         }else{
-            res.status(401).json("Post not created")
+            res.status(401).json({message: "Post not created"});
         }
     }catch(err){
         next(err);
