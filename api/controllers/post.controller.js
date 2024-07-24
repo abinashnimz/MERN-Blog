@@ -68,11 +68,34 @@ export const getposts = async (req, res, next)=>{
 
 export const deletepost = async (req, res, next) =>{
     if(!req.user.isAdmin || req.user.userId !== req.params.userId){
-        return next(403, "You are not allowed to delete this post")
+        return next(403, "You are not allowed to delete this post");
     }
     try{
         await Post.findByIdAndDelete(req.params.postId);
         res.status(200).json("Post has been deleted");
+    }catch(err){
+        next(err);
+    }
+}
+
+export const updatepost = async (req, res, next)=>{
+    if(!req.user.isAdmin || req.user.userId !== req.params.userId){
+        return next(403, "You are not allowed to delete this post");
+    }
+    try{
+        const slug = req.body.title.split(" ").join("-").toLowerCase().replace(/[^a-zA-Z0-9-]/g, "");
+        const updatedPost = await Post.findByIdAndUpdate(
+            req.params.postId, {
+                $set:{
+                    title: req.body.title,
+                    category: req.body.category,
+                    image: req.body.image,
+                    content: req.body.content,
+                    slug: slug,
+                }
+            }, {new:true}
+        );
+        res.status(201).json(updatedPost);
     }catch(err){
         next(err);
     }
