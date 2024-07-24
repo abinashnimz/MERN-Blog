@@ -2,7 +2,7 @@ import User from "../models/user.model.js";
 import { errorHandler } from "../utils/error.js"
 import bcrypt from "bcryptjs";
 
-export const test = (req, res)=>{
+export const testuser = (req, res)=>{
     res.json({message:"Test user successful"})
 }
 

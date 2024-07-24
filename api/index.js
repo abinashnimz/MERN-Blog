@@ -18,10 +18,10 @@ app.use(cookieParser());
 
 app.use(express.json());
 
-app.use("*", errorRouter);
 app.use("/api/user", userRouter);
 app.use("/api/auth", authRouter);
 app.use("/api/post", postRouter);
+app.use("*", errorRouter);
 
 app.use(errorMiddleware);
 connectDB().then(()=>{
