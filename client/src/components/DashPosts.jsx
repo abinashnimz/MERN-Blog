@@ -14,7 +14,7 @@ export const DashPosts = () => {
     const [postIdToDelete, setPostIdToDelete] = useState(null);
     // console.log(currentUser);
     useEffect(() => {
-        const getPosts = async () => {
+        const fetchPosts = async () => {
             try {
                 const res = await fetch(`/api/post/getposts?userId=${currentUser._id}`);
                 const data = await res.json();
@@ -33,7 +33,7 @@ export const DashPosts = () => {
             }
         }
         if (currentUser.isAdmin) {
-            getPosts();
+            fetchPosts();
         }
     }, [currentUser._id]);
 
