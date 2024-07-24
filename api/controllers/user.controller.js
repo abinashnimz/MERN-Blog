@@ -49,12 +49,12 @@ export const updateUser = async (req, res, next)=>{
 
 export const deleteUser = async (req, res, next)=>{
     if(req.user.userId !== req.params.userId){
-        return next(403, "You are not allowed to delete this user");
+        return next(errorHandler(403, "You are not allowed to delete this user"));
     }
     try{
         const data = await User.findByIdAndDelete({_id:req.params.userId});
         if(!data){
-            return next(500, "Something went wrong");
+            return next(errorHandler(500, "Something went wrong"));
         }
         res.status(202).json("User deleted successfully");
     }catch(err){
@@ -65,6 +65,48 @@ export const deleteUser = async (req, res, next)=>{
 export const signoutUser = async (req, res, next)=>{
     try{
        await res.clearCookie("access_token").status(200).json("User signout successfully");
+    }catch(err){
+        next(err);
+    }
+}
+
+export const getUsers = async (req, res, next)=>{
+    if(!req.user.isAdmin){
+        return next(errorHandler(403, "You are not allowed to get users"));
+    }
+    try{
+        const startIndex = parseInt(req.query.startIndex) || 0;
+        const limit = parseInt(req.query.limit) || 9;
+        const sortDirection = req.query.sortDirection === "asc" ? 1 : -1;
+
+        const users = await User.find()
+        .sort({createdAt: sortDirection})
+        .skip(startIndex)
+        .limit(limit);
+
+        const usersWithoutPassword = users.map((user)=>{
+            const {password, ...rest} = user._doc;
+            return rest;
+        })
+
+        const totalUsers = await User.countDocuments();
+
+        const now = new Date();
+        const oneMonthAgo = new Date(
+            now.getFullYear(),
+            now.getMonth()-1,
+            now.getDate()
+        )
+        const lastMonthUsers = await User.countDocuments({
+            createdAt: {$gte: oneMonthAgo}
+        });
+
+        res.status(200).json({
+            users: usersWithoutPassword,
+            totalUsers: totalUsers,
+            lastMonthUsers: lastMonthUsers,
+        })
+        
     }catch(err){
         next(err);
     }
