@@ -5,7 +5,7 @@ export const createComment = async (req, res, next)=>{
     try{
         const { content, postId, userId } = req.body;
         if(userId !== req.user.userId){
-            return errorHandler(403, "You are not allowed to comment")
+            return next(errorHandler(403, "You are not allowed to comment"))
         }
         const newComment = new Comment({
             content,
@@ -18,4 +18,14 @@ export const createComment = async (req, res, next)=>{
         next(err);
     }
 
+}
+
+export const getComments = async (req, res, next)=>{
+    try{
+        const comments = await Comment.find({postId: req.params.postId}).sort({createdAt:-1});
+        res.status(200).json(comments);
+
+    }catch(err){
+        next(err);
+    }
 }
