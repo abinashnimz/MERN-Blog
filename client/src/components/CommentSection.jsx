@@ -2,12 +2,16 @@ import { Alert, Button, Textarea } from "flowbite-react";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
+import { Comment } from "./Comment";
 
 export const CommentSection = ({postId})=>{
 
     const { currentUser } = useSelector((state)=>state.user);
     const [comment, setComment] = useState("");
     const [commentError, setCommentError] = useState(null);
+    const [comments, setComments] = useState([]);
+
+    console.log(comments);
 
 
     const handleSubmit = async (e)=>{
@@ -25,6 +29,7 @@ export const CommentSection = ({postId})=>{
             if(res.ok){
                 setCommentError(null);
                 setComment("");
+                setComments([data, ...comments]);
             }
             if(!res.ok){
                 setCommentError(data.message);
@@ -34,6 +39,21 @@ export const CommentSection = ({postId})=>{
             setCommentError(err.message);
         }
     }
+
+    useEffect(()=>{
+        const fetchComments = async ()=>{
+            try{
+                const res = await fetch(`/api/comment/getcomments/${postId}`, {method:"GET"});
+                const data = await res.json();
+                if(res.ok){
+                    setComments(data);
+                }
+            }catch(err){
+                console.log(err);
+            }
+        }
+        fetchComments();
+    }, [postId]);
 
     return(
         <div className="max-w-2xl mx-auto w-full p-3">
@@ -68,7 +88,21 @@ export const CommentSection = ({postId})=>{
                     )}
                 </form>
             )}
-
+            {comments.length>0 ? (
+                <>
+                    <div className="flex gap-1 items-center my-5 text-sm">
+                        <p>Comments</p>
+                        <p className="border border-gray-400 py-1 px-2 rounded-sm">{comments.length}</p>
+                    </div>
+                    {comments.map((comment)=>(
+                        <Comment
+                        key={comment._id}
+                        comment={comment} />
+                    ))}
+                </>) : (
+                    <p className="text-sm my-5">No comments yet!</p>
+                )}
+            
         </div>
     )
 }
