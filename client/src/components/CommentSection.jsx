@@ -11,8 +11,6 @@ export const CommentSection = ({postId})=>{
     const [commentError, setCommentError] = useState(null);
     const [comments, setComments] = useState([]);
 
-    console.log(comments);
-
 
     const handleSubmit = async (e)=>{
         e.preventDefault();
@@ -54,6 +52,24 @@ export const CommentSection = ({postId})=>{
         }
         fetchComments();
     }, [postId]);
+
+    const handleLike = async (commentId)=>{
+        try{
+            const res = await fetch(`/api/comment/likecomment/${commentId}`, {method:"PUT"});
+            const data = await res.json();
+            if(res.ok){
+                setComments(comments.map((comment)=>
+                    comment._id === commentId ? {
+                        ...comment,
+                        likes:data.likes,
+                        numberOfLikes: data.numberOfLikes,
+                    } : comment
+                ))
+            }
+        }catch(err){
+            console.log(err);
+        }
+    }
 
     return(
         <div className="max-w-2xl mx-auto w-full p-3">
@@ -97,7 +113,8 @@ export const CommentSection = ({postId})=>{
                     {comments.map((comment)=>(
                         <Comment
                         key={comment._id}
-                        comment={comment} />
+                        comment={comment}
+                        onLike={handleLike} />
                     ))}
                 </>) : (
                     <p className="text-sm my-5">No comments yet!</p>
