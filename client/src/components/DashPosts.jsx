@@ -21,8 +21,7 @@ export const DashPosts = () => {
                 if (res.ok) {
                     setUserPosts(data.posts);
                 }
-                console.log(data.posts.length)
-                if(data.posts.length <9){
+                if (data.posts.length < 9) {
                     setShowMore(false);
                 }
                 if (!res.ok) {
@@ -53,21 +52,21 @@ export const DashPosts = () => {
         }
     }
 
-    const handleDeletePost = async ()=>{
+    const handleDeletePost = async () => {
         setShowModal(false);
-        try{
+        try {
             const res = await fetch(`/api/post/deletepost/${postIdToDelete}/${currentUser._id}`,
-                {method:"DELETE"});
+                { method: "DELETE" });
             const data = await res.json();
-            if(!res.ok){
+            if (!res.ok) {
                 console.log(data.message)
             }
-            if(res.ok){
-                setUserPosts((prev)=>
-                    prev.filter((post)=> post._id !==postIdToDelete)
+            if (res.ok) {
+                setUserPosts((prev) =>
+                    prev.filter((post) => post._id !== postIdToDelete)
                 );
             }
-        }catch(err){
+        } catch (err) {
             console.log(err.message);
         }
     }
@@ -105,7 +104,7 @@ export const DashPosts = () => {
                                         {post.category}
                                     </Table.Cell>
                                     <Table.Cell>
-                                        <span onClick={() => {setShowModal(true), setPostIdToDelete(post._id)}} className="font-medium text-red-500 hover:underline cursor-pointer">Delete</span>
+                                        <span onClick={() => { setShowModal(true), setPostIdToDelete(post._id) }} className="font-medium text-red-500 hover:underline cursor-pointer">Delete</span>
                                     </Table.Cell>
                                     <Table.Cell>
                                         <Link to={`/update-post/${post._id}`}>

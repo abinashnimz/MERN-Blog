@@ -5,7 +5,7 @@ import { useSelector } from "react-redux";
 import { Button, Textarea } from "flowbite-react";
 
 
-export const Comment = ({ comment, onLike, onEdit }) => {
+export const Comment = ({ comment, onLike, onEdit, onDelete }) => {
     const { currentUser } = useSelector((state) => state.user);
     const [user, setUser] = useState({});
     const [isEdit, setIsEdit] = useState(false);
@@ -23,6 +23,10 @@ export const Comment = ({ comment, onLike, onEdit }) => {
     }, [comment]);
 
     const handleEdit = async () => {
+        if (!currentUser) {
+            navigate("/sign-in");
+            return;
+        }
         try {
             setIsEdit(true);
             setEditedContent(comment.content);
@@ -31,18 +35,22 @@ export const Comment = ({ comment, onLike, onEdit }) => {
         }
     }
 
-    const handleSave = async ()=>{
-        try{
+    const handleSave = async () => {
+        if (!currentUser) {
+            navigate("/sign-in");
+            return;
+        }
+        try {
             const res = await fetch(`/api/comment/editcomment/${comment._id}`, {
                 method: "PUT",
-                headers: {"Content-Type":"application/json"},
-                body: JSON.stringify({content:editedContent}),
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ content: editedContent }),
             });
-            if(res.ok){
+            if (res.ok) {
                 setIsEdit(false);
                 onEdit(comment, editedContent);
             }
-        }catch(err){
+        } catch (err) {
             console.log(err);
         }
     }
@@ -62,11 +70,11 @@ export const Comment = ({ comment, onLike, onEdit }) => {
 
                 {isEdit ? (
                     <>
-                        <Textarea value={editedContent} rows={3} maxLength="200" onChange={(e)=> setEditedContent(e.target.value)}/>
-                            <div className="mt-2 flex items-center gap-4 text-sm justify-end">
-                                <Button type="button" gradientDuoTone="purpleToBlue" size="sm" onClick={handleSave}>Save</Button>
-                                <Button type="button" gradientDuoTone="purpleToBlue" size="sm" outline onClick={()=> setIsEdit(false)}>Cancel</Button>
-                            </div>
+                        <Textarea value={editedContent} rows={3} maxLength="200" onChange={(e) => setEditedContent(e.target.value)} />
+                        <div className="mt-2 flex items-center gap-4 text-sm justify-end">
+                            <Button type="button" gradientDuoTone="purpleToBlue" size="sm" onClick={handleSave}>Save</Button>
+                            <Button type="button" gradientDuoTone="purpleToBlue" size="sm" outline onClick={() => setIsEdit(false)}>Cancel</Button>
+                        </div>
                     </>
                 ) : (
                     <>
@@ -76,11 +84,11 @@ export const Comment = ({ comment, onLike, onEdit }) => {
                                 <FaThumbsUp />
                             </button>
                             <p className="text-gray-500">{comment.numberOfLikes > 0 && comment.numberOfLikes + " " + (comment.numberOfLikes === 1 ? "Like" : "Likes")}</p>
-                            {(currentUser._id === comment.userId) && (
+                            {currentUser && (currentUser._id === comment.userId) && (
                                 <button className="text-gray-500 hover:text-blue-500 pl-2" onClick={handleEdit}>Edit</button>
                             )}
-                            {(currentUser._id === comment.userId || currentUser.isAdmin) && (
-                                <button className="text-gray-500 hover:text-red-500 pl-2">Delete</button>
+                            {currentUser && (currentUser._id === comment.userId || currentUser.isAdmin) && (
+                                <button className="text-gray-500 hover:text-red-500 pl-2" onClick={() => onDelete(comment._id)}>Delete</button>
                             )}
                         </div>
                     </>
