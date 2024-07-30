@@ -12,6 +12,7 @@ import { OnlyAdminPrivateRoute } from "./components/OnlyAdminPrivateRoute";
 import { CreatePost } from "./pages/CreatePost";
 import { UpdatePost } from "./pages/UpdatePost";
 import { PostPage } from "./pages/PostPage";
+import { Search } from "./pages/Search";
 
 
 
@@ -23,6 +24,7 @@ export const App = ()=>{
         <Route path="/" element={<Home />} />
         <Route path="/about" element={<About />} />
         <Route path="/project" element={<Project />} />
+        <Route path="/search" element={<Search/>}/>
         <Route element={<PrivateRoute/>}>
           <Route path="/dashboard" element={<Dashboard />}/>
         </Route>
