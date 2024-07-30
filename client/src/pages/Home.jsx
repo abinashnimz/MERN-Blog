@@ -48,7 +48,7 @@ export const Home = ()=>{
                                 <PostCard key={ind} post={post} />
                             ))}
                         </div>
-                        <Link className="text-center text-lg text-teal-500 text-center hover:underline">View all posts</Link>
+                        <Link className="text-center text-lg text-teal-500 text-center hover:underline" to="/search">View all posts</Link>
                     </div>
                 )}
             </div>
